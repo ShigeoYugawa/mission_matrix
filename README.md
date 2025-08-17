@@ -1,110 +1,118 @@
-了解です。では、ChatGPTの会話文を一切含めず、**そのままコピーして `README.md` として使えるMarkdownテキスト**として出力します。
 
 ---
 
-# Complete Colonel - アーカイブ機能付きTODOリスト
+# Mission Matrix
 
-## プロジェクト概要
+Django + Python で作る「アーカイブ付き TODO リスト / コマンドー風演出」ポートフォリオプロジェクト。
 
-「Complete Colonel」は、メイトリクス大佐をモチーフにしたアーカイブ機能付きTODOリストアプリです。
-コマンドー風のネタモードと、実務寄りの通常モードのデザイン切替が可能です。
-
-* コマンドー風モード: 黒背景、ドット風フォント、ベネットの煽りセリフ付き
-* 通常モード: 白背景、シンプルで実務寄りのUI
-
-## 主な機能
-
-* 通常任務（タスク）一覧の表示
-* 任務の追加
-* 任務の完了
-* 任務のアーカイブ（削除ではなく保存）
-* アーカイブ済み任務の一覧表示
-* アーカイブ済み任務の再任務化
-* アーカイブ済み任務の完全削除
-* コマンドー風モード時、任務の状態に応じたベネットの煽りセリフ表示
+---
 
 ## 技術スタック
 
 * Python 3.12
-* Django 5.x
-* Bootstrap 5
-* HTML / CSS
-* SQLite（開発環境用）
+* Django 5.2.5
+* HTML (テンプレート)
+* セッション管理
+* 開発環境: Windows11 + WSL(Ubuntu)
 
-## モード切替
+---
 
-views.py の先頭にあるフラグで切替可能:
+## 環境構築手順
 
-```python
-COMMANDO_MODE = True  # True: コマンドー風 / False: 実務寄り
+### 1. リポジトリをクローン
+
+```bash
+git clone https://github.com/ShigeoYugawa/mission_matrix.git
+cd mission_matrix
 ```
 
-* コマンドー風モードではドット風フォント・黒背景・煽りセリフが有効
-* 実務モードではシンプルで可読性の高いUIに切替
+### 2. 仮想環境作成
 
-## 実行方法
-
-1. 仮想環境の作成・有効化
-
-```
-python -m venv .venv
-source .venv/bin/activate  # Windowsの場合: .venv\Scripts\activate
+```bash
+python3 -m venv venv
+source venv/bin/activate  # Linux / macOS
+# Windows (PowerShell) の場合: venv\Scripts\Activate.ps1
 ```
 
-2. 必要パッケージのインストール
+### 3. 必要パッケージのインストール
 
+```bash
+pip install --upgrade pip
+pip install django==5.2.5
+pip install mypy django-stubs
 ```
+
+※ 必要に応じて `requirements.txt` を作成して以下でまとめてインストール可能です：
+
+```bash
 pip install -r requirements.txt
 ```
 
-3. マイグレーション
+### 4. Django プロジェクト・アプリ作成（既存プロジェクトの場合は不要）
 
+```bash
+# 新規作成の場合
+django-admin startproject mission_matrix .
+python manage.py startapp complete_colonel
 ```
+
+### 5. データベースマイグレーション
+
+```bash
 python manage.py migrate
 ```
 
-4. サーバ起動
+### 6. 開発用サーバー起動
 
-```
+```bash
 python manage.py runserver
 ```
 
-5. ブラウザでアクセス
-
-```
-http://127.0.0.1:8000/
-```
-
-## ディレクトリ構成（抜粋）
-
-```
-complete_colonel/
-├─ models.py
-├─ views.py
-├─ urls.py
-└─ templates/complete_colonel/
-
-mission_matrix/
-└─ urls.py
-```
-
-## デザイン方針
-
-* 黒背景 + ドット風フォントで黎明期ファミコン風演出（コマンドー風モード）
-* 完了済み任務は色で区別、カード背景を微調整
-* ボタンやリンクも視認性を高める調整済み
-* 将来的にユーザー管理やモード切替ボタンの実装も可能
-
-## 注意事項
-
-* コマンドー風モードはポートフォリオ用のネタ表現です。実務での使用を想定している場合は通常モードを推奨
-* 現在はユーザー管理機能は未実装
-
-## 今後の改善予定
-
-* ボタンやカードの点滅アニメーションを軽く調整
-* ユーザー管理・認証機能の追加
-* ReactやAPI分離構成への移行検討
+ブラウザで `http://127.0.0.1:8000/` を開く。
 
 ---
+
+## 型チェック (mypy) 設定
+
+mypy を導入して型チェックを行う。
+
+### 1. mypy.ini の例
+
+```ini
+[mypy]
+python_version = 3.12
+warn_unused_configs = True
+ignore_missing_imports = True
+strict = True
+
+[mypy.plugins.django-stubs]
+django_settings_module = "mission_matrix.settings"
+```
+
+### 2. 型チェック実行
+
+```bash
+mypy complete_colonel
+```
+
+* `django-stubs` を使うことで Django モデルやクラスベースビューなども型チェック可能
+
+---
+
+## 使用方法
+
+* 通常モード / コマンドー風モードを切替可能（views.py 内の `COMMANDO_MODE` フラグ）
+* 任務（タスク）を追加・完了・アーカイブ・復活・削除可能
+* コマンドー風モードではベネットのセリフが表示される
+
+---
+
+## 注意点
+
+* SQLite データベース (`db.sqlite3`) は `.gitignore` で除外済み
+* 仮想環境やキャッシュも Git に含めない
+* 日本語フォントのドット文字には対応していない
+
+---
+
 
