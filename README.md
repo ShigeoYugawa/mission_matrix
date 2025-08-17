@@ -31,7 +31,6 @@ cd mission_matrix
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # Linux / macOS
-# Windows (PowerShell) の場合: venv\Scripts\Activate.ps1
 ```
 
 ### 3. 必要パッケージのインストール
